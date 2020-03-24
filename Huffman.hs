@@ -3,13 +3,12 @@ module Main where
 import Options.Applicative
 import Data.Semigroup ((<>))
 import qualified Data.ByteString as B
-import Data.Word (Word8)
-import Data.ByteString.Char8 (pack, unpack)
 import Compressor
-import Tree
+
+import System.TimeIt
 
 main :: IO ()
-main = huffman =<< execParser opt
+main = timeIt $ huffman =<< execParser opt
      where
          opt = info (config)
              ( fullDesc <> progDesc "A simple compressor using Huffman's compression algorithm")

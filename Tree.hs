@@ -8,13 +8,13 @@ data Tree = Node Value Tree Tree
           | Empty 
           deriving (Show, Read)
 
-
+{- 
 height :: Tree -> Int
 height Empty = 0
 height (Node _ t1 t2) = if h1 > h2 then h1 + 1 else h2 + 1
                         where
                             h1 = height t1
-                            h2 = height t2
+                            h2 = height t2 -}
 
 
 find :: Tree -> Word8 -> [Int]

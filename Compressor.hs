@@ -12,12 +12,12 @@ type TreeHeap = H.MinPrioHeap Int Tree
 
 writeTree :: B.ByteString -> B.ByteString
 writeTree b = do
-    let tree = buildTree $ setup b
+    let tree = buildTree $ listTable b
     let bits = compress b tree
     B.append (pack (show tree)) (B.append (pack "$") bits)
 
-setup :: B.ByteString -> TreeHeap
-setup bs = H.fromList (listTable bs)
+--setup :: B.ByteString -> TreeHeap
+--setup bs = H.fromList (listTable bs)
 
 buildTree :: TreeHeap -> Tree
 buildTree heap = case H.view heap of
@@ -48,6 +48,8 @@ compress' b t = case B.uncons b of
 shiftBits :: [Int] -> Int
 shiftBits [] = 0
 shiftBits (x:xs) = (x `shiftL` (length (x:xs) -1)) .|. shiftBits xs
+
+
 
 {- -------------------------- -}
 readTree :: B.ByteString -> B.ByteString
