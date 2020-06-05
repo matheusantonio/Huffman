@@ -6,19 +6,14 @@ import Data.Word (Word8)
 import Data.Bits
 import Tree
 import Data.ByteString.Char8 (pack, unpack)
-import Frequency (listTable)
-
-type TreeHeap = H.MinPrioHeap Int Tree
+import Frequency (listTable, TreeHeap)
 
 writeTree :: B.ByteString -> B.ByteString
 writeTree b = do
     let tree = buildTree $ listTable b
     let bits = compress b tree
     B.append (pack (show tree)) (B.append (pack "$") bits)
-
---setup :: B.ByteString -> TreeHeap
---setup bs = H.fromList (listTable bs)
-
+    
 buildTree :: TreeHeap -> Tree
 buildTree heap = case H.view heap of
     Just ((pos1, tree1), heap1) -> case H.view heap1 of
@@ -48,7 +43,6 @@ compress' b t = case B.uncons b of
 shiftBits :: [Int] -> Int
 shiftBits [] = 0
 shiftBits (x:xs) = (x `shiftL` (length (x:xs) -1)) .|. shiftBits xs
-
 
 
 {- -------------------------- -}
