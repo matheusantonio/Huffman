@@ -3,7 +3,7 @@ module Main where
 import Options.Applicative
 import Data.Semigroup ((<>))
 import qualified Data.ByteString as B
-import Compressor
+import qualified Compressor as C
 
 import System.TimeIt
 
@@ -38,7 +38,7 @@ config = Zipper
 huffman :: Zipper -> IO ()
 huffman (Zipper o d Unzip) = do
     f <- B.readFile o
-    let res = readTree f
+    let res = C.unzip f
     if res == B.empty then
         putStrLn $ "The decompression process went wrong, maybe you provided an unrecognizable file or the file is corrupted." 
     else do
@@ -46,7 +46,7 @@ huffman (Zipper o d Unzip) = do
         putStrLn $ "Decompression process succesful!"
 huffman (Zipper o d Zip) = do
     f <- B.readFile o
-    let res = writeTree f
+    let res = C.zip f
     if res == B.empty then
         putStrLn $ "A problem occurred during the compression proccess! Please, try again or report the problem."
     else do

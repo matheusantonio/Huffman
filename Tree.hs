@@ -1,6 +1,7 @@
 module Tree where
 
 import Data.Word (Word8)
+import qualified Data.Heap as H
 
 data Value = Value Word8 | NotValue deriving (Show, Read)
 
@@ -8,14 +9,7 @@ data Tree = Node Value Tree Tree
           | Empty 
           deriving (Show, Read)
 
-{- 
-height :: Tree -> Int
-height Empty = 0
-height (Node _ t1 t2) = if h1 > h2 then h1 + 1 else h2 + 1
-                        where
-                            h1 = height t1
-                            h2 = height t2 -}
-
+type TreeHeap = H.MinPrioHeap Int Tree
 
 find :: Tree -> Word8 -> [Int]
 find (Node (Value v) _ _) s
@@ -26,7 +20,7 @@ find (Node NotValue t1 t2) s
     | null res2 = 1 : res2
     | last res1 == -1 = 1 : res2
     | last res2 == -1 = 0 : res1
-    | otherwise = [5]
+    -- | otherwise = [5]
     where
         res1 = find t1 s
         res2 = find t2 s
@@ -37,3 +31,11 @@ recover (Node (Value v) t1 t2) (x:xs) = (v, (x:xs))
 recover (Node NotValue t1 t2) (x:xs)
     | x == 0 = recover t1 xs
     | x == 1 = recover t2 xs
+
+buildTree :: TreeHeap -> Tree
+buildTree heap = case H.view heap of
+    Just ((pos1, tree1), heap1) -> case H.view heap1 of
+        Nothing -> tree1
+        Just ((pos2, tree2), heap2) -> do
+            let newTree = (Node NotValue tree2 tree1)
+            buildTree $ H.insert (pos1+pos2, newTree) heap2

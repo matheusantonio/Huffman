@@ -8,7 +8,6 @@ import Data.Word (Word8)
 
 type Table = M.Map Word8 Int
 
-type TreeHeap = H.MinPrioHeap Int Tree
 
 new :: Table
 new = M.empty
